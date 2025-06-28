@@ -55,6 +55,13 @@ public class BST {
         return searchRec(root, key);
     }
 
+    Node findSuccesor(Node node){
+        while(node.left!=null){
+            node = node.left;
+        }
+        return node;
+    }
+
     private Node deleteRec(Node root, int key){
         if(root==null){
             return root;
@@ -64,9 +71,19 @@ public class BST {
         } else if (key > root.key){
             root.right = deleteRec(root.right, key);
         }else{
-
-
+            // Now you have found the node to be deleted
+            // case 1: when the node has 0 or 1 child
+            if(root.left==null) {
+                return root.right;
+            } else if(root.right==null){
+                return root.left;
+            }
+            // case 2: when node has 2 children
+            Node successor = findSuccesor(root.right);
+            root.key = successor.key;
+            root.right = deleteRec(root.right, successor.key);
         }
+        return root;
     }
 
     public void removeKey(int key){
@@ -101,7 +118,11 @@ class DriverCode{
         bst.insertKey(130);
         bst.insertKey(170);
         bst.BFS();
-        int key = 500;
-        System.out.println(bst.searchKey(key));
+        int key = 170;
+//        System.out.println(bst.searchKey(key));
+        System.out.println();
+        System.out.println("After deletion:");
+        bst.removeKey(key);
+        bst.BFS();
     }
 }
